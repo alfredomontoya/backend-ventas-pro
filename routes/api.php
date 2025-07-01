@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\ProductoController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -11,4 +12,5 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/users', [UserController::class, 'index']);
 Route::apiResource('productos', ProductoController::class);
+Route::apiResource('clientes', ClienteController::class);
 
