@@ -3,67 +3,156 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ClienteRequest;
 use App\Models\Cliente;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ClienteController extends Controller
 {
+    // Listar todos los clientes
     public function index()
     {
-        $clientes = Cliente::with(['telefonos', 'correos', 'direcciones'])->get();
-        return response()->json($clientes);
+        return response()->json(
+            Cliente::with(['telefonos', 'correos', 'direcciones'])->get()
+        );
     }
 
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'ci' => 'required|string|max:32|unique:clientes,ci',
-            'nombres' => 'required|string|max:64',
-            'apellido_paterno' => 'required|string|max:64',
-            'apellido_materno' => 'nullable|string|max:64',
-            'fecha_nacimiento' => 'nullable|date',
-            'estado' => 'boolean',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $cliente = Cliente::create($validator->validated());
-
-        return response()->json($cliente, 201);
-    }
-
+    // Mostrar un cliente específico
     public function show(Cliente $cliente)
     {
-        $cliente->load(['telefonos', 'correos', 'direcciones']);
-        return response()->json($cliente);
+        return response()->json(
+            $cliente->load(['telefonos', 'correos', 'direcciones'])
+        );
     }
 
-    public function update(Request $request, Cliente $cliente)
+    // Crear un nuevo cliente
+    public function store(ClienteRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'ci' => 'sometimes|string|max:32|unique:clientes,ci,' . $cliente->id,
-            'nombres' => 'sometimes|string|max:64',
-            'apellido_paterno' => 'sometimes|string|max:64',
-            'apellido_materno' => 'nullable|string|max:64',
-            'fecha_nacimiento' => 'nullable|date',
-            'estado' => 'boolean',
-        ]);
+        $validated = $request->validated();
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        DB::beginTransaction();
+
+        try {
+            // Crear cliente
+            $cliente = Cliente::create([
+                'ci' => $validated['ci'],
+                'nombres' => $validated['nombres'],
+                'apellido_paterno' => $validated['apellido_paterno'],
+                'apellido_materno' => $validated['apellido_materno'] ?? null,
+                'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
+                'estado' => $validated['estado'] ?? true,
+            ]);
+
+            // Crear teléfonos
+            foreach ($validated['telefonos'] ?? [] as $telefono) {
+                $cliente->telefonos()->create([
+                    'numero' => $telefono['numero'],
+                    'es_principal' => $telefono['es_principal'] ?? false,
+                ]);
+            }
+
+            // Crear correos
+            foreach ($validated['correos'] ?? [] as $correo) {
+                $cliente->correos()->create([
+                    'email' => $correo['email'],
+                    'es_principal' => $correo['es_principal'] ?? false,
+                ]);
+            }
+
+            // Crear direcciones
+            foreach ($validated['direcciones'] ?? [] as $direccion) {
+                $cliente->direcciones()->create([
+                    'direccion' => $direccion['direccion'],
+                    'es_principal' => $direccion['es_principal'] ?? false,
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json(
+                $cliente->load('telefonos', 'correos', 'direcciones'),
+                201
+            );
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Error al registrar cliente',
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        $cliente->update($validator->validated());
-
-        return response()->json($cliente);
     }
 
+    // Actualizar un cliente
+    public function update(ClienteRequest $request, Cliente $cliente)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+            // Actualizar cliente
+            $cliente->update([
+                'ci' => $validated['ci'],
+                'nombres' => $validated['nombres'],
+                'apellido_paterno' => $validated['apellido_paterno'],
+                'apellido_materno' => $validated['apellido_materno'] ?? null,
+                'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
+                'estado' => $validated['estado'] ?? true,
+            ]);
+
+            // Reemplazar teléfonos
+            if (isset($validated['telefonos'])) {
+                $cliente->telefonos()->delete();
+                foreach ($validated['telefonos'] as $telefono) {
+                    $cliente->telefonos()->create([
+                        'numero' => $telefono['numero'],
+                        'es_principal' => $telefono['es_principal'] ?? false,
+                    ]);
+                }
+            }
+
+            // Reemplazar correos
+            if (isset($validated['correos'])) {
+                $cliente->correos()->delete();
+                foreach ($validated['correos'] as $correo) {
+                    $cliente->correos()->create([
+                        'email' => $correo['email'],
+                        'es_principal' => $correo['es_principal'] ?? false,
+                    ]);
+                }
+            }
+
+            // Reemplazar direcciones
+            if (isset($validated['direcciones'])) {
+                $cliente->direcciones()->delete();
+                foreach ($validated['direcciones'] as $direccion) {
+                    $cliente->direcciones()->create([
+                        'direccion' => $direccion['direccion'],
+                        'es_principal' => $direccion['es_principal'] ?? false,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json(
+                $cliente->load('telefonos', 'correos', 'direcciones')
+            );
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Error al actualizar cliente',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // Eliminar un cliente
     public function destroy(Cliente $cliente)
     {
         $cliente->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Cliente eliminado.']);
     }
 }

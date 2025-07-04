@@ -24,7 +24,10 @@ class DatabaseSeeder extends Seeder
             'clientes',
             'direccion_clientes',
             'telefono_clientes',
-            'correo_clientes'
+            'correo_clientes',
+            'almacenes',
+            'movimientos',
+            'detalle_movimientos'
         ]);
 
         User::factory()->create([
