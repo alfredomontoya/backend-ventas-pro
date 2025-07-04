@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
             'correo_clientes',
             'almacenes',
             'movimientos',
-            'detalle_movimientos'
+            'detalle_movimientos',
+            'ventas',
+            'detalle_ventas'
         ]);
 
         User::factory()->create([
@@ -38,7 +40,8 @@ class DatabaseSeeder extends Seeder
         User::factory(10)->create();
         $this->call([
             ProductoSeeder::class,
-            ClienteSeeder::class
+            ClienteSeeder::class,
+            VentaSeeder::class,
         ]);
     }
 
