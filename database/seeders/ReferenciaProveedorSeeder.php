@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Almacen;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class AlmacenSeeder extends Seeder
+class ReferenciaProveedorSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +13,5 @@ class AlmacenSeeder extends Seeder
     public function run(): void
     {
         //
-        Almacen::factory()->create();
     }
 }

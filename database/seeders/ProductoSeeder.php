@@ -14,22 +14,12 @@ class ProductoSeeder extends Seeder
 {
     public function run(): void
     {
-        // Crear un usuario que será el creador de todos los productos y precios
-        $usuario = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-        ]);
 
         // Crear 5 categorías
         $categorias = CategoriaProducto::factory(5)->create();
 
         // Por cada categoría, crear 10 productos
-        foreach ($categorias as $categoria) {
-            Producto::factory(10)->create([
-                'categoria_producto_id' => $categoria->id,
-                'creado_por' => $usuario->id,
-            ])->each(function ($producto) use ($usuario) {
-
+            Producto::factory(50)->create()->each(function ($producto)  {
                 // Imágenes del producto
                 $imagenes = ImagenProducto::factory(rand(1, 3))->create([
                     'producto_id' => $producto->id,
@@ -41,7 +31,6 @@ class ProductoSeeder extends Seeder
                 // Precio actual
                 PrecioProducto::factory()->create([
                     'producto_id' => $producto->id,
-                    'creado_por' => $usuario->id,
                 ]);
 
                 // Movimientos de stock
@@ -49,7 +38,6 @@ class ProductoSeeder extends Seeder
                     'producto_id' => $producto->id,
                 ]);
             });
-        }
     }
 }
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VentaRequest;
 use App\Models\Venta;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class VentaController extends Controller
@@ -140,4 +142,23 @@ class VentaController extends Controller
             ], 500);
         }
     }
+
+    // Reportes
+    public function reporteDetalle(Request $request)
+    {
+        $fechaInicio = $request->input('fecha_inicio');
+        $fechaFin = $request->input('fecha_fin');
+
+        // Usar fecha actual si no se proporciona alguna
+        $fechaInicio = $fechaInicio ? Carbon::parse($fechaInicio) : Carbon::today();
+        $fechaFin = $fechaFin ? Carbon::parse($fechaFin) : Carbon::today();
+
+        // Obtener las ventas en el rango de fechas
+        $ventas = Venta::with('usuario', 'cliente', 'detalles.producto')
+            ->whereBetween('fecha_venta', [$fechaInicio->startOfDay(), $fechaFin->endOfDay()])
+            ->get();
+
+        return response()->json($ventas);
+    }
+
 }
