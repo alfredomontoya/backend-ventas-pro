@@ -31,7 +31,9 @@ class DatabaseSeeder extends Seeder
             'ventas',
             'detalle_ventas',
             'proveedores',
-            'referencia_proveedores'
+            'referencia_proveedores',
+            'tramites',
+            'derivacions'
         ]);
 
         User::factory()->create([
@@ -46,6 +48,7 @@ class DatabaseSeeder extends Seeder
             VentaSeeder::class,
             ProveedorSeeder::class,
             AlmacenSeeder::class,
+            TramiteSeeder::class
         ]);
     }
 

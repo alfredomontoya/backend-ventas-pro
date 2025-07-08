@@ -6,10 +6,12 @@ use App\Http\Controllers\Api\ClienteController;
 use App\Http\Controllers\Api\ProveedorController;
 use App\Http\Controllers\Api\ProductoController;
 use App\Http\Controllers\Api\AlmacenController;
+use App\Http\Controllers\Api\DerivacionController;
 use App\Http\Controllers\Api\MovimientoController;
 use App\Http\Controllers\Api\DetalleMovimientoController;
 use App\Http\Controllers\Api\VentaController;
 use App\Http\Controllers\Api\DetalleVentaController;
+use App\Http\Controllers\Api\TramiteController;
 use App\Http\Controllers\AuthController;
 
 // RUTAS PÚBLICAS
@@ -45,6 +47,18 @@ Route::post('register', [AuthController::class, 'register']);
     // REPORTES
     Route::apiResource('ventas', VentaController::class);
     Route::apiResource('detalles-venta', DetalleVentaController::class);
+
+    // Rutas para Tramite (CRUD completo)
+    Route::apiResource('tramites', TramiteController::class);
+
+    // Rutas para Derivacion (CRUD completo)
+    Route::apiResource('derivaciones', DerivacionController::class);
+
+    // Rutas para obtener derivaciones de un trámite específico (relación)
+    Route::get('tramites/{tramite}/derivaciones', [DerivacionController::class, 'indexPorTramite']);
+
+    // Ruta para crear una derivación ligada a un trámite específico
+    Route::post('tramites/{tramite}/derivaciones', [DerivacionController::class, 'storePorTramite']);
 
 // });
 
