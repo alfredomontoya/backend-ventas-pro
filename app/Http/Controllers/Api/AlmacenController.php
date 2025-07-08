@@ -10,7 +10,7 @@ class AlmacenController extends Controller
 {
     public function index()
     {
-        return Almacen::with('usuario')->get();
+        return Almacen::with('user')->get();
     }
 
     public function store(Request $request)
@@ -26,9 +26,10 @@ class AlmacenController extends Controller
         return response()->json($almacen, 201);
     }
 
-    public function show(Almacen $almacen)
+    public function show($id)
     {
-        return $almacen->load('usuario');
+        $almacen = Almacen::with('user')->findOrFail($id);
+        return response()->json($almacen, 201);
     }
 
     public function update(Request $request, Almacen $almacen)

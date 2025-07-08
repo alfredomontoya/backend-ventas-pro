@@ -21,7 +21,7 @@ class AlmacenFactory extends Factory
             'nombre' => $this->faker->company,
             'ubicacion' => $this->faker->address,
             'descripcion' => $this->faker->sentence,
-            'usuario_id' => User::factory(),
+            'user_id' => User::factory(),
         ];
     }
 }

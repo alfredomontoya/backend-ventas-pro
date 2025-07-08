@@ -14,6 +14,6 @@ class AlmacenSeeder extends Seeder
     public function run(): void
     {
         //
-        Almacen::factory()->create();
+        Almacen::factory(10)->create();
     }
 }
