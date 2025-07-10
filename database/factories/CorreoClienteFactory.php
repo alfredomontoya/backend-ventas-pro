@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Cliente;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class CorreoClienteFactory extends Factory
     public function definition(): array
     {
         return [
-            'cliente_id' => Cliente::factory(),
+            'cliente_id' => Cliente::query()->inRandomOrder()->value('id'),
             'email' => $this->faker->unique()->safeEmail,
             'es_principal' => false,
         ];

@@ -23,11 +23,11 @@ class PrecioProductoFactory extends Factory
     {
         $inicio = $this->faker->dateTimeBetween('-6 months', 'now');
         return [
-            'producto_id' => Producto::factory(),
+            'producto_id' => Producto::query()->inRandomOrder()->value('id'),
             'precio' => $this->faker->randomFloat(2, 10, 500),
             'fecha_inicio' => $inicio,
             'fecha_fin' => null,
-            'creado_por' => User::factory(),
+            'creado_por' => User::query()->inRandomOrder()->value('id'),
         ];
     }
 }

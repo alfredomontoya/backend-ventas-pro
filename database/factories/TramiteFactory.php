@@ -22,7 +22,7 @@ class TramiteFactory extends Factory
             'mz' => $this->faker->randomDigit(),
             'lt' => $this->faker->randomDigit(),
             'diamante' => $this->faker->word(),
-            'user_id' => User::factory(), // Crea un usuario automáticamente
+            'user_id' => User::query()->inRandomOrder()->value('id'), // Crea un usuario automáticamente
         ];
     }
 }

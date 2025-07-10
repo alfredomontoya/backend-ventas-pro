@@ -18,7 +18,7 @@ class TelefonoClienteFactory extends Factory
     public function definition(): array
     {
         return [
-            'cliente_id' => Cliente::factory(),
+            'cliente_id' => Cliente::query()->inRandomOrder()->value('id'),
             'numero' => $this->faker->unique()->phoneNumber,
             'es_principal' => false,
         ];

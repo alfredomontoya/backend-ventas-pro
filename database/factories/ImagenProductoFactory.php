@@ -14,7 +14,7 @@ class ImagenProductoFactory extends Factory
     public function definition(): array
     {
         return [
-            'producto_id' => Producto::factory(),
+            'producto_id' => Producto::query()->inRandomOrder()->value('id'),
             'ruta' => $this->faker->imageUrl(640, 480, 'products', true),
             'es_predeterminada' => false,
         ];

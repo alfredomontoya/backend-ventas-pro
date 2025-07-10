@@ -19,8 +19,8 @@ class DetalleMovimientoFactory extends Factory
     public function definition(): array
     {
         return [
-            'movimiento_id' => Movimiento::factory(),
-            'producto_id' => Producto::factory(),
+            'movimiento_id' => Movimiento::query()->inRandomOrder()->value('id'),
+            'producto_id' => Producto::query()->inRandomOrder()->value('id'),
             'cantidad' => $this->faker->numberBetween(1, 100),
             'precio_unitario' => $this->faker->randomFloat(2, 10, 500),
         ];

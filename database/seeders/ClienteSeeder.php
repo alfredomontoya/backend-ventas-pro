@@ -18,17 +18,17 @@ class ClienteSeeder extends Seeder
     {
         Cliente::factory(10)->create()->each(function ($cliente) {
             // Teléfonos
-            $telefonos = TelefonoCliente::factory()->count(2)->make();
+            $telefonos = TelefonoCliente::factory(['cliente_id' => $cliente->id])->count(2)->make();
             $telefonos[0]->es_principal = true;
             $cliente->telefonos()->saveMany($telefonos);
 
             // Correos
-            $correos = CorreoCliente::factory()->count(2)->make();
+            $correos = CorreoCliente::factory(['cliente_id' => $cliente->id])->count(2)->make();
             $correos[0]->es_principal = true;
             $cliente->correos()->saveMany($correos);
 
             // Direcciones
-            $direcciones = DireccionCliente::factory()->count(2)->make();
+            $direcciones = DireccionCliente::factory(['cliente_id' => $cliente->id])->count(2)->make();
             $direcciones[0]->es_principal = true;
             $cliente->direcciones()->saveMany($direcciones);
         });

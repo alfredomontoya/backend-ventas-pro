@@ -28,7 +28,7 @@ class DetalleVentaFactory extends Factory
         $subtotal = $cantidad * $precioUnitario;
 
         return [
-            'venta_id' => Venta::factory(),
+            'venta_id' => Venta::query()->inRandomOrder()->value('id'),
             'producto_id' => $producto->id,
             'cantidad' => $cantidad,
             'precio_unitario' => $precioUnitario,

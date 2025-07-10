@@ -24,8 +24,8 @@ class VentaFactory extends Factory
         $montoPagadoUSD = $moneda === 'USD' ? round($montoPagado / $tipoCambio, 2) : null;
 
         return [
-            'cliente_id' => Cliente::factory(),
-            'user_id' => User::factory(),
+            'cliente_id' => Cliente::query()->inRandomOrder()->value('id'),
+            'user_id' => User::query()->inRandomOrder()->value('id'),
             'fecha_venta' => $this->faker->dateTimeBetween('-30 days', 'now'),
             'total' => $total,
             'descuento' => $descuento,

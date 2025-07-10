@@ -20,7 +20,7 @@ class StockProductoFactory extends Factory
     public function definition(): array
     {
         return [
-            'producto_id' => Producto::factory(),
+            'producto_id' => Producto::query()->inRandomOrder()->value('id'),
             'cantidad' => $this->faker->numberBetween(-20, 100),
             'tipo_movimiento' => $this->faker->randomElement(['entrada', 'venta', 'devolución']),
             'fecha_movimiento' => $this->faker->dateTimeThisYear(),

@@ -24,10 +24,10 @@ class ProductoFactory extends Factory
         return [
             'nombre' => $this->faker->words(2, true),
             'descripcion' => $this->faker->sentence(),
-            'categoria_producto_id' => CategoriaProducto::factory(),
+            'categoria_producto_id' => CategoriaProducto::query()->inRandomOrder()->value('id'),
             'codigo_barras' => $this->faker->unique()->ean13(),
             'estado' => true,
-            'creado_por' => User::factory(),
+            'creado_por' => User::query()->inRandomOrder()->value('id'),
         ];
     }
 }

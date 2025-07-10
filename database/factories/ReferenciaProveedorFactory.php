@@ -15,7 +15,7 @@ class ReferenciaProveedorFactory extends Factory
         $tipo = $this->faker->randomElement(['telefono', 'email', 'direccion']);
 
         return [
-            'proveedor_id' => Proveedor::factory(),
+            'proveedor_id' => Proveedor::query()->inRandomOrder()->value('id'),
             'tipo' => $tipo,
             'valor' => match ($tipo) {
                 'telefono' => $this->faker->phoneNumber(),

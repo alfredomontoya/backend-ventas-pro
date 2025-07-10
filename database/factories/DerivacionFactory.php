@@ -14,9 +14,9 @@ class DerivacionFactory extends Factory
     public function definition(): array
     {
         return [
-            'tramite_id' => Tramite::factory(),
-            'usuario_origen_id' => User::factory(),
-            'usuario_destino_id' => User::factory(),
+            'tramite_id' => Tramite::query()->inRandomOrder()->value('id'),
+            'usuario_origen_id' => User::query()->inRandomOrder()->value('id'),
+            'usuario_destino_id' => User::query()->inRandomOrder()->value('id'),
             'area' => $this->faker->randomElement(['Legal', 'Archivo', 'Recepción']),
             'glosa' => $this->faker->sentence(),
             'orden' => $this->faker->unique()->numberBetween(1, 10),

@@ -18,7 +18,7 @@ class DireccionClienteFactory extends Factory
     public function definition(): array
     {
         return [
-            'cliente_id' => Cliente::factory(),
+            'cliente_id' => Cliente::query()->inRandomOrder()->value('id'),
             'direccion' => $this->faker->address,
             'es_principal' => false,
         ];

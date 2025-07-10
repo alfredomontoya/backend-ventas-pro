@@ -36,13 +36,9 @@ class DatabaseSeeder extends Seeder
             'derivacions'
         ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-
-        User::factory(10)->create();
+        
         $this->call([
+            UserSeeder::class,
             ProductoSeeder::class,
             ClienteSeeder::class,
             VentaSeeder::class,
@@ -65,6 +61,7 @@ class DatabaseSeeder extends Seeder
         foreach ($tables as $table) {
             // Usa delete() para mayor compatibilidad con SQLite
             DB::table($table)->delete();
+            DB::statement("ALTER TABLE `$table` AUTO_INCREMENT = 1");
             // También puedes resetear los IDs si quieres en SQLite
             if ($connection === 'sqlite') {
                 DB::statement("DELETE FROM sqlite_sequence WHERE name = '$table'");
@@ -77,4 +74,6 @@ class DatabaseSeeder extends Seeder
             DB::statement('PRAGMA foreign_keys = ON;');
         }
     }
+
+    
 }

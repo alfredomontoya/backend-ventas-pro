@@ -21,8 +21,8 @@ class MovimientoFactory extends Factory
         return [
             'tipo' => $this->faker->randomElement(['entrada', 'salida', 'ajuste']),
             'motivo' => $this->faker->word,
-            'almacen_id' => Almacen::factory(),
-            'usuario_id' => User::factory(),
+            'almacen_id' => Almacen::query()->inRandomOrder()->value('id'),
+            'usuario_id' => User::query()->inRandomOrder()->value('id'),
             'observaciones' => $this->faker->sentence,
         ];
     }
